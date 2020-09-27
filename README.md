@@ -31,11 +31,11 @@ bloom_filter = BloomFilter::Filter.new(1000, 0.001)
 ```
 
 #### API
-__add(value)__ - add value item into filter
+__add(value)__ - add item into filter
 
-__includes?(value)__ - check if value includes in the filter
+__includes?(value)__ - check if filter includes the value
 
-__contains?(value)__ - alias __includes?(value)__
+__contains?(value)__ - alias of __includes?(value)__
 
 __count__ - returns number of inserted items
 
