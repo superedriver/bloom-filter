@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bloom_filter (0.1.0)
+    qbloom_filter (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -28,7 +28,7 @@ PLATFORMS
 
 DEPENDENCIES
   bitset (~> 1.2)
-  bloom_filter!
+  qbloom_filter!
   rake (~> 12.0)
   rspec (~> 3.0)
 

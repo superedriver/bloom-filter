@@ -1,7 +1,7 @@
 require_relative 'lib/bloom_filter/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "bloom_filter"
+  spec.name          = "qbloom_filter"
   spec.version       = BloomFilter::VERSION
   spec.authors       = ["qaz"]
   spec.email         = ["qaz@qaz.qaz"]
