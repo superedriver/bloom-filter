@@ -6,3 +6,4 @@ gemspec
 gem "rake", "~> 12.0"
 
 gem "bitset", "~> 1.2"
+gem "rspec", "~> 3.0"
