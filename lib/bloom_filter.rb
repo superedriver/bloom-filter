@@ -5,7 +5,7 @@ require 'digest/md5'
 module BloomFilter
   PRIME = 100_000_000_003
   MAX_HASH_PARAM = 1000
-  class BloomFilter
+  class Filter
     attr_reader :count
 
     def initialize(capacity = 100, probability = 0.01)
@@ -20,6 +20,7 @@ module BloomFilter
       #number of hash functions that minimizes the probability of false positives
       @k = (Math.log(2) * (@m / capacity)).ceil
 
+      # a, b params for hash functions
       @hash_params = []
       @k.times { @hash_params.push([rand(1000), rand(1000)]) }
     end
@@ -47,6 +48,7 @@ module BloomFilter
 
       result
     end
+    alias :includes? :contains?
 
     private
 
