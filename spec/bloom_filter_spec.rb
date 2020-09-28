@@ -72,4 +72,76 @@ RSpec.describe BloomFilter::Filter do
       expect(bf.count).to eq(5)
     end
   end
+
+  describe "bit_size" do
+    it "capacity: 100, probability: 0.01" do
+      bf = BloomFilter::Filter.new(100, 0.01)
+      expect(bf.bit_size).to eq(959)
+    end
+
+    it "capacity: 1000, probability: 0.001" do
+      bf = BloomFilter::Filter.new(1000, 0.001)
+      expect(bf.bit_size).to eq(14378)
+    end
+  end
+
+  describe "get_bit set_bit clear_bit" do
+    it "get set clear 0" do
+      pos = 0
+      bf = BloomFilter::Filter.new(100, 0.01)
+      expect(bf.get_bit(pos)).to eq(false)
+      bf.set_bit(pos)
+      expect(bf.get_bit(pos)).to eq(true)
+      bf.clear_bit(pos)
+      expect(bf.get_bit(pos)).to eq(false)
+    end
+
+    it "get set clear 10" do
+      pos = 10
+      bf = BloomFilter::Filter.new(100, 0.01)
+      expect(bf.get_bit(pos)).to eq(false)
+      bf.set_bit(pos)
+      expect(bf.get_bit(pos)).to eq(true)
+      bf.clear_bit(pos)
+      expect(bf.get_bit(pos)).to eq(false)
+    end
+  end
+
+  describe "out of range error" do
+    it "get_bit" do
+      bf = BloomFilter::Filter.new(10, 0.1)
+      pos = bf.bit_size + 1
+      expect{ bf.get_bit(pos) }.to raise_error(BloomFilter::OUT_OF_RANGE)
+    end
+
+    it "set_bit" do
+      bf = BloomFilter::Filter.new(10, 0.1)
+      pos = bf.bit_size + 1
+      expect{ bf.set_bit(pos) }.to raise_error(BloomFilter::OUT_OF_RANGE)
+    end
+
+    it "clear_bit" do
+      bf = BloomFilter::Filter.new(10, 0.1)
+      pos = bf.bit_size + 1
+      expect{ bf.clear_bit(pos) }.to raise_error(BloomFilter::OUT_OF_RANGE)
+    end
+  end
+
+  describe "different instances with the same params" do
+    it "bit_size should be the same" do
+      bf1 = BloomFilter::Filter.new(10, 0.1)
+      bf2 = BloomFilter::Filter.new(10, 0.1)
+      expect(bf1.bit_size).to eq(bf2.bit_size)
+    end
+
+    it "bites should be the same after insertions" do
+      bf1 = BloomFilter::Filter.new(10, 0.1)
+      bf2 = BloomFilter::Filter.new(10, 0.1)
+      bf1.add('test')
+      bf2.add('test')
+      bf1.add('test1')
+      bf2.add('test1')
+      bf1.bit_size.times { |i| expect(bf1.get_bit(i)).to eq(bf2.get_bit(i)) }
+    end
+  end
 end
