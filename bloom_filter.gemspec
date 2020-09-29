@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
 
   spec.licenses    = ['MIT']
   spec.summary       = %q{Bloom Filter}
-  spec.description   = %q{Simple Bloom Filter}
+  spec.description   = %q{Bloom Filter with union and intersection}
   spec.homepage      = "https://github.com/superedriver/bloom-filter"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
