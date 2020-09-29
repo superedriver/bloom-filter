@@ -7,7 +7,7 @@ A Bloom filter is a space-efficient probabilistic data structure
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'bloom_filter'
+gem 'qbloom_filter'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install bloom_filter
+    $ gem install qbloom_filter
 
 ## Usage
 
