@@ -39,7 +39,9 @@ __contains?(value)__ - alias of __includes?(value)__
 
 __count__ - returns number of inserted items
 
-##### Methods for union and intersection several bloom filters
+__capacity__ - returns initial capacity
+
+__probability__ - returns initial probability
 
 __bit_size__ - returns number of bits in the bit array
 
@@ -48,6 +50,10 @@ __get_bit(position)__ - returns value of a bit(true/false) in the bit array, ris
 __set_bit(position)__ - set a bit to TRUE in the bit array, rises an error if position is out of range of the bit array
 
 __clear_bit(position)__ - set a bit to FALSE in the bit array, rises an error if position is out of range of the bit array
+
+__union_with(bloom_filter)__ - unions current bloom filter with another one, bloom filters should be the instances of this module and have the same initial params(capacity, probability)
+
+__intersect_with(bloom_filter)__ - intersects current bloom filter with another one, bloom filters should be the instances of this module and have the same initial params(capacity, probability)
 
 ## Contributing
 

@@ -73,6 +73,20 @@ RSpec.describe BloomFilter::Filter do
     end
   end
 
+  describe "initial params" do
+    it "default params" do
+      bf = BloomFilter::Filter.new
+      expect(bf.capacity).to eq(100)
+      expect(bf.probability).to eq(0.01)
+    end
+
+    it "capacity: 1000, probability: 0.001" do
+      bf = BloomFilter::Filter.new(1000, 0.001)
+      expect(bf.capacity).to eq(1000)
+      expect(bf.probability).to eq(0.001)
+    end
+  end
+
   describe "bit_size" do
     it "capacity: 100, probability: 0.01" do
       bf = BloomFilter::Filter.new(100, 0.01)
@@ -142,6 +156,131 @@ RSpec.describe BloomFilter::Filter do
       bf1.add('test1')
       bf2.add('test1')
       bf1.bit_size.times { |i| expect(bf1.get_bit(i)).to eq(bf2.get_bit(i)) }
+    end
+  end
+
+  describe "union_with" do
+    it "before union" do
+      val1 = 'Kolyan'
+      val2 = 'Vovan'
+      bf1 = BloomFilter::Filter.new(10, 0.1)
+      bf2 = BloomFilter::Filter.new(10, 0.1)
+
+      bf1.add(val1)
+      bf2.add(val2)
+
+      expect(bf1.includes?(val1)).to eq(true)
+      expect(bf1.includes?(val2)).to eq(false)
+
+      expect(bf2.includes?(val1)).to eq(false)
+      expect(bf2.includes?(val2)).to eq(true)
+    end
+
+    it "after union" do
+      val1 = 'Kolyan'
+      val2 = 'Vovan'
+      bf1 = BloomFilter::Filter.new(10, 0.1)
+      bf2 = BloomFilter::Filter.new(10, 0.1)
+      bf1.add(val1)
+      bf2.add(val2)
+
+      bf1.union_with(bf2)
+
+      expect(bf1.includes?(val1)).to eq(true)
+      expect(bf1.includes?(val2)).to eq(true)
+
+      expect(bf2.includes?(val1)).to eq(false)
+      expect(bf2.includes?(val2)).to eq(true)
+    end
+
+    it "error union_with different capacity" do
+      bf1 = BloomFilter::Filter.new(100, 0.1)
+      bf2 = BloomFilter::Filter.new(10, 0.1)
+
+      expect{ bf1.union_with(bf2) }.to raise_error(BloomFilter::DIFFERENT_INITIAL_PARAMS)
+    end
+
+    it "error union_with different probability" do
+      bf1 = BloomFilter::Filter.new(100, 0.1)
+      bf2 = BloomFilter::Filter.new(100, 0.01)
+
+      expect{ bf1.union_with(bf2) }.to raise_error(BloomFilter::DIFFERENT_INITIAL_PARAMS)
+    end
+
+    it "error union_with different objects" do
+      bf1 = BloomFilter::Filter.new(100, 0.1)
+
+      expect{ bf1.union_with([]) }.to raise_error(BloomFilter::DIFFERENT_INITIAL_PARAMS)
+    end
+  end
+
+  describe "intersect_with" do
+    it "before intersection" do
+      val1 = 'Kolyan'
+      val2 = 'Vovan'
+      val3 = 'Stasyan'
+
+      bf1 = BloomFilter::Filter.new(10, 0.1)
+      bf2 = BloomFilter::Filter.new(10, 0.1)
+
+      bf1.add(val1)
+      bf1.add(val3)
+
+      bf2.add(val2)
+      bf2.add(val3)
+
+      expect(bf1.includes?(val1)).to eq(true)
+      expect(bf1.includes?(val2)).to eq(false)
+      expect(bf1.includes?(val3)).to eq(true)
+
+      expect(bf2.includes?(val1)).to eq(false)
+      expect(bf2.includes?(val2)).to eq(true)
+      expect(bf2.includes?(val3)).to eq(true)
+    end
+
+    it "after intersection" do
+      val1 = 'Kolyan'
+      val2 = 'Vovan'
+      val3 = 'Stasyan'
+
+      bf1 = BloomFilter::Filter.new(10, 0.1)
+      bf2 = BloomFilter::Filter.new(10, 0.1)
+
+      bf1.add(val1)
+      bf1.add(val3)
+
+      bf2.add(val2)
+      bf2.add(val3)
+
+      bf1.intersect_with(bf2)
+
+      expect(bf1.includes?(val1)).to eq(false)
+      expect(bf1.includes?(val2)).to eq(false)
+      expect(bf1.includes?(val3)).to eq(true)
+
+      expect(bf2.includes?(val1)).to eq(false)
+      expect(bf2.includes?(val2)).to eq(true)
+      expect(bf2.includes?(val3)).to eq(true)
+    end
+
+    it "error intersect_with different capacity" do
+      bf1 = BloomFilter::Filter.new(100, 0.1)
+      bf2 = BloomFilter::Filter.new(10, 0.1)
+
+      expect{ bf1.intersect_with(bf2) }.to raise_error(BloomFilter::DIFFERENT_INITIAL_PARAMS)
+    end
+
+    it "error intersect_with different probability" do
+      bf1 = BloomFilter::Filter.new(100, 0.1)
+      bf2 = BloomFilter::Filter.new(100, 0.01)
+
+      expect{ bf1.intersect_with(bf2) }.to raise_error(BloomFilter::DIFFERENT_INITIAL_PARAMS)
+    end
+
+    it "error intersect_with different objects" do
+      bf1 = BloomFilter::Filter.new(100, 0.1)
+
+      expect{ bf1.intersect_with([]) }.to raise_error(BloomFilter::DIFFERENT_INITIAL_PARAMS)
     end
   end
 end
